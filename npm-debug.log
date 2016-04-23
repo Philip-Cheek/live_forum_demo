@@ -1,0 +1,105 @@
+0 info it worked if it ends with ok
+1 verbose cli [ '/usr/local/bin/node',
+1 verbose cli   '/usr/local/bin/npm',
+1 verbose cli   'install',
+1 verbose cli   'ngRoute' ]
+2 info using npm@2.15.0
+3 info using node@v4.4.2
+4 verbose install initial load of /Users/philipcheek/Desktop/Coding_Dojo/mean_total/package.json
+5 warn package.json mean_forum@0.0.1 No description
+6 warn package.json mean_forum@0.0.1 No repository field.
+7 warn package.json mean_forum@0.0.1 No README data
+8 warn package.json mean_forum@0.0.1 No license field.
+9 verbose installManyTop reading scoped package data from /Users/philipcheek/Desktop/Coding_Dojo/mean_total/node_modules/body-parser/package.json
+10 verbose installManyTop reading scoped package data from /Users/philipcheek/Desktop/Coding_Dojo/mean_total/node_modules/express/package.json
+11 verbose installManyTop reading scoped package data from /Users/philipcheek/Desktop/Coding_Dojo/mean_total/node_modules/mongoose/package.json
+12 verbose installManyTop reading scoped package data from /Users/philipcheek/Desktop/Coding_Dojo/mean_total/node_modules/path/package.json
+13 info package.json path@0.12.7 path is also the name of a node core module.
+14 verbose readDependencies loading dependencies from /Users/philipcheek/Desktop/Coding_Dojo/mean_total/package.json
+15 silly cache add args [ 'ngRoute', null ]
+16 verbose cache add spec ngRoute
+17 silly cache add parsed spec Result {
+17 silly cache add   raw: 'ngRoute',
+17 silly cache add   scope: null,
+17 silly cache add   name: 'ngRoute',
+17 silly cache add   rawSpec: '',
+17 silly cache add   spec: 'latest',
+17 silly cache add   type: 'tag' }
+18 silly addNamed ngRoute@latest
+19 verbose addNamed "latest" is being treated as a dist-tag for ngRoute
+20 info addNameTag [ 'ngRoute', 'latest' ]
+21 silly mapToRegistry name ngRoute
+22 silly mapToRegistry using default registry
+23 silly mapToRegistry registry https://registry.npmjs.org/
+24 silly mapToRegistry data Result {
+24 silly mapToRegistry   raw: 'ngRoute',
+24 silly mapToRegistry   scope: null,
+24 silly mapToRegistry   name: 'ngRoute',
+24 silly mapToRegistry   rawSpec: '',
+24 silly mapToRegistry   spec: 'latest',
+24 silly mapToRegistry   type: 'tag' }
+25 silly mapToRegistry uri https://registry.npmjs.org/ngRoute
+26 verbose addNameTag registry:https://registry.npmjs.org/ngRoute not in flight; fetching
+27 verbose request uri https://registry.npmjs.org/ngRoute
+28 verbose request no auth needed
+29 info attempt registry request try #1 at 5:26:04 PM
+30 verbose request id 196586c0e60200b0
+31 http request GET https://registry.npmjs.org/ngRoute
+32 http 404 https://registry.npmjs.org/ngRoute
+33 verbose headers { 'content-type': 'application/json',
+33 verbose headers   'cache-control': 'max-age=0',
+33 verbose headers   'content-length': '2',
+33 verbose headers   'accept-ranges': 'bytes',
+33 verbose headers   date: 'Sat, 23 Apr 2016 00:26:04 GMT',
+33 verbose headers   via: '1.1 varnish',
+33 verbose headers   age: '0',
+33 verbose headers   connection: 'keep-alive',
+33 verbose headers   'x-served-by': 'cache-sjc3124-SJC',
+33 verbose headers   'x-cache': 'MISS',
+33 verbose headers   'x-cache-hits': '0',
+33 verbose headers   'x-timer': 'S1461371164.890147,VS0,VE90',
+33 verbose headers   vary: 'Accept-Encoding' }
+34 silly get cb [ 404,
+34 silly get   { 'content-type': 'application/json',
+34 silly get     'cache-control': 'max-age=0',
+34 silly get     'content-length': '2',
+34 silly get     'accept-ranges': 'bytes',
+34 silly get     date: 'Sat, 23 Apr 2016 00:26:04 GMT',
+34 silly get     via: '1.1 varnish',
+34 silly get     age: '0',
+34 silly get     connection: 'keep-alive',
+34 silly get     'x-served-by': 'cache-sjc3124-SJC',
+34 silly get     'x-cache': 'MISS',
+34 silly get     'x-cache-hits': '0',
+34 silly get     'x-timer': 'S1461371164.890147,VS0,VE90',
+34 silly get     vary: 'Accept-Encoding' } ]
+35 verbose stack Error: Registry returned 404 for GET on https://registry.npmjs.org/ngRoute
+35 verbose stack     at makeError (/usr/local/lib/node_modules/npm/node_modules/npm-registry-client/lib/request.js:264:12)
+35 verbose stack     at CachingRegistryClient.<anonymous> (/usr/local/lib/node_modules/npm/node_modules/npm-registry-client/lib/request.js:242:14)
+35 verbose stack     at Request._callback (/usr/local/lib/node_modules/npm/node_modules/npm-registry-client/lib/request.js:172:14)
+35 verbose stack     at Request.self.callback (/usr/local/lib/node_modules/npm/node_modules/request/request.js:199:22)
+35 verbose stack     at emitTwo (events.js:87:13)
+35 verbose stack     at Request.emit (events.js:172:7)
+35 verbose stack     at Request.<anonymous> (/usr/local/lib/node_modules/npm/node_modules/request/request.js:1036:10)
+35 verbose stack     at emitOne (events.js:82:20)
+35 verbose stack     at Request.emit (events.js:169:7)
+35 verbose stack     at IncomingMessage.<anonymous> (/usr/local/lib/node_modules/npm/node_modules/request/request.js:963:12)
+36 verbose statusCode 404
+37 verbose pkgid ngRoute
+38 verbose cwd /Users/philipcheek/Desktop/Coding_Dojo/mean_total
+39 error Darwin 14.5.0
+40 error argv "/usr/local/bin/node" "/usr/local/bin/npm" "install" "ngRoute"
+41 error node v4.4.2
+42 error npm  v2.15.0
+43 error code E404
+44 error 404 Registry returned 404 for GET on https://registry.npmjs.org/ngRoute
+44 error 404
+44 error 404 'ngRoute' is not in the npm registry.
+44 error 404 Your package name is not valid, because
+44 error 404
+44 error 404  1. name can no longer contain capital letters
+44 error 404 It was specified as a dependency of 'mean_forum'
+44 error 404
+44 error 404 Note that you can also install from a
+44 error 404 tarball, folder, http url, or git url.
+45 verbose exit [ 1, true ]

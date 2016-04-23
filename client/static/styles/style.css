@@ -1,0 +1,11 @@
+*{
+	padding: 0;
+	margin: 0;
+}
+
+#filthy_head{
+	width:100%;
+	height:3em;
+	border-bottom: .3em solid black;
+	padding:1em;
+}
