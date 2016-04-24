@@ -6,6 +6,39 @@
 		<script>
 			var Filthy_Forum = angular.module('mean_forum', [], function() {});
 
+			Filthy_Forum.factory('FilthyFactory', function($http) {
+				var factory = {}
+
+				factory.get_emails = function(callback){
+					$http.get('/user_email').success(function(output){
+						email_list = output
+						callback(email_list)
+					})
+				};
+
+				return factory
+			});
+			
+			Filthy_Forum.directive('exists', function () {
+    			return {
+        			restrict: 'A',
+        			require: 'ngModel',
+        			link: function (scope, elm, attrs, ctrl) {
+	            		ctrl.$parsers.unshift(function (viewValue) {
+	                		var duplicate = scope[attrs.exists];
+
+	                		if (scope.duplicate.indexOf(viewValue) !== -1) {
+	                    		ctrl.$setValidity('already_exists', false);
+	                    		return undefined;
+	                		} else {
+	                    		ctrl.$setValidity('already_exists', true);
+	                    		return viewValue;
+	                		}
+	            		});
+        			}
+    			};
+			});
+
 			Filthy_Forum.directive('match', function($parse) {
   				return {
     				require: 'ngModel',
@@ -19,13 +52,18 @@
   				};
 			});
 
-			Filthy_Forum.controller('Login_Controller', function ($scope){
+			Filthy_Forum.controller('Login_Controller', function ($scope, FilthyFactory){
 				$scope.user = {};
-				$scope.strong =/^(?=.*[A-Z])(?=.*[a-z])(?=.*\d).*$/
+				$scope.strong = /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d).*$/;
+				$scope.emails = [];
+
+				FilthyFactory.get_email = function(data){
+					$scope.emails = data;
+				}
 
 				$scope.submitForm = function(isValid) {
 					if (isValid) { 
-						alert('our form is amazing');
+						console.log('happy_valid');
 					}
 				};
 	        });
@@ -39,6 +77,10 @@
 		</div> 
 
 		<div id = "submit_box">
+			<div id = "head_box">
+				<button>Login</button>
+				<button>Register</button>
+			</div>
 			<form name="userForm" ng-submit="submitForm(userForm.$valid)" novalidate>
 
 				<p class = "above">First Name:</p>
@@ -56,8 +98,9 @@
             	<p ng-show="userForm.n_name.$error.maxlength" class="help-block">Nickname is too long.</p>
 
             	<p class = "above">Email:</p>
-				<input type = "text" name = "email" class = "i_box" ng-model="user.email" required>
+				<input type = "text" name = "email" class = "i_box" ng-model="user.email" exists = "emails" ng-user = required>
             	<p ng-show="userForm.email.$invalid && !userForm.email.$pristine" class="help-block">Enter a valid email.</p>
+            	<p ng-show="userForm.email.$invalid">Email already exists in Database</p> 
 
             	<p class = "above">Password:</p>
             	<input type = "password" name = "p_word" class = "i_box" ng-model="user.p_word" ng-minlength = "8" required ng-pattern="strong">
@@ -68,7 +111,7 @@
             	<p class = "above">Confirm Password:</p>
             	<input type="password" name="c_word" ng-model="user.c_word" match="user.p_word" required>
             	<p ng-show="userForm.c_word.$invalid && !userForm.c_word.$pristine" class="validate">Confirm Password</p>
-            	<p ng-show="userForm.c_word.$error.mismatch">Passwords must match</p> 
+            	<p ng-show="!userForm.c_word.$pristine && userForm.c_word.$error.mismatch">Passwords must match</p> 
 
 
             	<button type="submit" class="button_submit">Submit</button>
