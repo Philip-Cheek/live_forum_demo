@@ -1,24 +1,79 @@
 <html ng-app = "mean_forum">
 	<head>
-		<title>Filthy MEAN SP Forum for Filthy Mean Users</title> 
-		<script type = "text/javascript" src = "https://ajax.googleapis.com/ajax/libs/angular/1.2.26/angular.min.js"></script>
+		<title>MEAN Live Forum Demonstration</title> 
+		<script type = "text/javascript" src = "https://ajax.googleapis.com/ajax/libs/angularjs/1.4.9/angular.min.js"></script>
+		<link rel = "stylesheet" type = "text/css" href = "../static/styles/style.css"/>
 		<script>
+			var Filthy_Forum = angular.module('mean_forum', [], function() {});
+
+			Filthy_Forum.directive('match', function($parse) {
+  				return {
+    				require: 'ngModel',
+    				link: function(scope, elem, attrs, ctrl) {
+		      			scope.$watch(function() {        
+		        			return $parse(attrs.match)(scope) === ctrl.$modelValue;
+		      			}, function(currentValue) {
+		        			ctrl.$setValidity('mismatch', currentValue);
+		      			});
+    				}
+  				};
+			});
+
 			Filthy_Forum.controller('Login_Controller', function ($scope){
-		    	$scope.valid = {
-		    		email
-		    	}
+				$scope.user = {};
+				$scope.strong =/^(?=.*[A-Z])(?=.*[a-z])(?=.*\d).*$/
+
+				$scope.submitForm = function(isValid) {
+					if (isValid) { 
+						alert('our form is amazing');
+					}
+				};
 	        });
+
+	
 		</script>
 	</head>
 	<body ng-controller = "Login_Controller">
 		<div id = "filthy_head">
-			<h1> {{head}} </h1>
+			<h1> Welcome to Thing </h1>
 		</div> 
 
-		<div id = "login">
-			<form action = 
+		<div id = "submit_box">
+			<form name="userForm" ng-submit="submitForm(userForm.$valid)" novalidate>
+
+				<p class = "above">First Name:</p>
+				<input type = "text" name = "f_name" class = "i_box" ng-model="user.f_name" required>
+				<p ng-show="userForm.f_name.$invalid && !userForm.f_name.$pristine" class="validate">Name is required.</p>
+
+				<p class = "above">Last Name:</p>
+				<input type = "text" name = "l_name" class = "i_box" ng-model="user.l_name" required>
+				<p ng-show="userForm.l_name.$invalid && !userForm.l_name.$pristine" class="validate">Name is required.</p>
+
+            	<p class = "above">Nickname:</p>
+				<input type = "text" name = "n_name" class = "i_box" ng-model="user.n_name" ng-minlength="3" ng-maxlength="12" required>
+				<p ng-show="userForm.n_name.$invalid && !userForm.n_name.$pristine" class="validate">Nickname is required.</p>
+				<p ng-show="userForm.n_name.$error.minlength" class="help-block">Nickname is too short.</p>
+            	<p ng-show="userForm.n_name.$error.maxlength" class="help-block">Nickname is too long.</p>
+
+            	<p class = "above">Email:</p>
+				<input type = "text" name = "email" class = "i_box" ng-model="user.email" required>
+            	<p ng-show="userForm.email.$invalid && !userForm.email.$pristine" class="help-block">Enter a valid email.</p>
+
+            	<p class = "above">Password:</p>
+            	<input type = "password" name = "p_word" class = "i_box" ng-model="user.p_word" ng-minlength = "8" required ng-pattern="strong">
+            	<p ng-show="userForm.p_word.$error.minlength" class="help-block">Password Must Be 8 Characters</p>
+            	<p ng-show="userForm.p_word.$error.pattern">Must contain one digit, and one upper and lower case character</p> 
+
+
+            	<p class = "above">Confirm Password:</p>
+            	<input type="password" name="c_word" ng-model="user.c_word" match="user.p_word" required>
+            	<p ng-show="userForm.c_word.$invalid && !userForm.c_word.$pristine" class="validate">Confirm Password</p>
+            	<p ng-show="userForm.c_word.$error.mismatch">Passwords must match</p> 
+
+
+            	<button type="submit" class="button_submit">Submit</button>
+            </form>
+        </div>
+
 		</div>
-		<div id = "register">		
-			<a href = "#/">Partial Test</a> 
-		<div ng-view = ""> 
-		</div>
+
