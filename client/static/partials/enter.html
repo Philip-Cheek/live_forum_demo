@@ -1,11 +1,11 @@
-<div ng-controller = 'UserController'> 
+<div ng-controller = 'Login_Controller'> 
 	
 <div id = "submit_box">
 		<div id = "head_box">
-			<button id = "log_tab">Login</button>
-			<button id = "reg_tab">Register</button>
+			<button id = "log_tab" ng-click= "tab('log')">Login</button>
+			<button id = "reg_tab" ng-click= "tab('reg')">Register</button>
 		</div>
-		<div id = "log_box">
+		<div id = "log_box" ng-show = "log_state">
 			<form name="logForm" ng-submit="submitLog(logForm.$valid)" novalidate>
 				<p>{{log_error}}</p>
 				<p class = "above">Email:</p>
@@ -13,9 +13,11 @@
 
 				<p class = "above">Password:</p>
         		<input type = "password" name = "p_word" class = "i_box" required>
+
+        		<button type="submit" class="button_submit">Submit</button>
 			</form>
 		</div>
-		<div id = "reg_box" style = "display:none">
+		<div id = "reg_box" ng-show = "reg_state">
 			<form name="regForm" ng-submit="submitReg(regForm.$valid)" novalidate>
 
 				<p class = "above">First Name:</p>
@@ -35,7 +37,7 @@
 	        	<p class = "above">Email:</p>
 				<input type = "text" name = "email" class = "i_box" ng-model="user.email" exists = "emails" ng-user = required>
 	        	<p ng-show="regForm.email.$invalid && !regForm.email.$pristine" class="help-block">Enter a valid email.</p>
-	        	<p ng-show="regForm.email.$invalid">Email already exists in Database</p> 
+	        	<p ng-show="regForm.email.$already_exists">Email already exists in Database</p> 
 
 	        	<p class = "above">Password:</p>
 	        	<input type = "password" name = "p_word" class = "i_box" ng-model="user.p_word" ng-minlength = "8" required ng-pattern="strong">

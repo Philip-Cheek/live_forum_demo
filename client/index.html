@@ -2,6 +2,7 @@
 	<head>
 		<title>MEAN Live Forum Demonstration</title> 
 		<script type = "text/javascript" src = "https://ajax.googleapis.com/ajax/libs/angularjs/1.4.9/angular.min.js"></script>
+		<script type = "text/javascript" src = "https://ajax.googleapis.com/ajax/libs/angularjs/1.4.9/angular-route.js"></script>
 		<link rel = "stylesheet" type = "text/css" href = "../static/styles/style.css"/>
 		<script>
 			var Filthy_Forum = angular.module('mean_forum', ['ngRoute'], function() {});
@@ -25,22 +26,23 @@
 				var factory = {}
 
 				factory.get_emails = function(callback){
+					console.log('here?')
 					$http.get('/email_list').success(function(output){
-						var email_list = output;
-						callback(email_list)
+						callback(output)
 					})
 				};
 
 				factory.create = function(info, callback){
+					"we get here"
 					$http.post('/create_user', info).success(function(output){
 						callback();
-					}
-				});
+					});
+				};
 
-				factory.login = function(info, callback).success(function(output){
-					$http.post('/create_user', info).success(function(output){
+				factory.login = function(info, callback){
+					$http.post('/log_in', info).success(function(output){
 						callback(output.status);
-					}
+					});
 				}
 
 				return factory
@@ -53,14 +55,20 @@
         			link: function (scope, elm, attrs, ctrl) {
 	            		ctrl.$parsers.unshift(function (viewValue) {
 	                		var duplicate = scope[attrs.exists];
-
-	                		if (scope.duplicate.indexOf(viewValue) !== -1) {
-	                    		ctrl.$setValidity('already_exists', false);
-	                    		return undefined;
-	                		} else {
-	                    		ctrl.$setValidity('already_exists', true);
-	                    		return viewValue;
-	                		}
+	                		console.log('duplication')
+	                		console.log(duplicate)
+	                		if(duplicate.length > 1){
+		                		if (scope.duplicate.indexOf(viewValue) !== -1) {
+		                    		ctrl.$setValidity('already_exists', false);
+		                    		return undefined;
+		                		} else {
+		                    		ctrl.$setValidity('already_exists', true);
+		                    		return viewValue;
+		                		}
+		                	}else{
+		                		ctrl.$setValidity('already_exists', true);
+		                    	return viewValue;
+		                	}
 	            		});
         			}
     			};
@@ -79,7 +87,8 @@
   				};
 			});
 
-			Filthy_Forum.controller('Login_Controller', function ($scope, FilthyFactory){
+			Filthy_Forum.controller('Login_Controller', function($scope, $location, FilthyFactory){
+				console.log('detective')
 				$scope.head = "Welcome";
 				$scope.log_error;
 
@@ -87,13 +96,18 @@
 				$scope.strong = /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d).*$/;
 				$scope.emails = [];
 
-				FilthyFactory.get_email = function(data){
+				$scope.log_state = true;
+				$scope.reg_state = false;
+
+				FilthyFactory.get_emails(function(data){
+					console.log('do we get to here')
 					$scope.emails = data;
-				}
+					console.log($scope.emails)
+				});
 
 				$scope.submitReg = function(isValid) {
 					if (isValid) { 
-						FilthyFactory.create_user($scope.user, function(){
+						FilthyFactory.create($scope.user, function(){
 							$scope.head = $scope.user.f_name;
 							$scope.user.p_word = "";
 							$scope.user.c_word = "";
@@ -102,9 +116,10 @@
 					}
 				};
 
-				$scope.logReg = function(isValid) {
+
+				$scope.submitLog = function(isValid) {
 					if (isValid) { 
-						FilthyFactory.log_in($scope.user, function(){
+						FilthyFactory.login($scope.user, function(){
 							if (!status){
 								$scope.log_error = "Log In incorrect."
 							}else{
@@ -116,34 +131,27 @@
 						});
 					}
 				};
+
+				$scope.tab = function(which){
+					console.log('this')
+					console.log(which)
+					if (which == "log" && !$scope.log_state){
+						console.log('true')
+						$scope.log_state = true;
+						$scope.reg_state = false;
+					}else if(which == "reg" && !$scope.reg_state){
+						console.log('reg_true')
+						$scope.reg_state = true;
+						$scope.log_state = false;
+					}
+				}
 	        });
 
-			var log = [document.getElementById("log_tab"), document.getElementById("log_box")];
-			var reg = [document.getElementById("reg_tab"), document.getElementById("reg_box")];
-			
-			var "log_state" = true;
-			
-			log[0].EventListener('click', function(){
-				if (!log_state){
-					log[1].style.display = 'block'
-					reg[1].style.display = 'none';
 
-					log_state = true;
-				}
-			});
-
-			reg[0].EventListener('click', function(){
-				if (log_state){
-					reg[1].style.display = 'block'
-					log[1].style.display = 'none';
-
-					log_state = false;
-				}
-			});
 		</script>
 	</head>
 	<body>
-		<div id = "filthy_head" ng-controller="Login-Controller">
+		<div id = "filthy_head" ng-controller="Login_Controller">
 			<h1>{{head}}</h1>
 		</div> 
 
