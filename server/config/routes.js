@@ -1,11 +1,13 @@
+var users = require('./../controllers/users.js');
+
 module.exports = function(app) {
-	app.get('/', function (req, res){
-  		res.render('index');
+	app.get('/email_list', function(req, res){
+		users.get_email;
 	});
 
 	app.post('/create_friend', function(req, res){
-		console.log(req.body)
 		friends.create(req, res)
+		res.redirect('')
 	});
 };
 

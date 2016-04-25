@@ -1,7 +1,57 @@
 <div ng-controller = 'UserController'> 
-	Nickname: <input type = "text" ng-model="name">
-	<button ng-click="user_submit()">Enter!</button>
+	
+<div id = "submit_box">
+		<div id = "head_box">
+			<button id = "log_tab">Login</button>
+			<button id = "reg_tab">Register</button>
+		</div>
+		<div id = "log_box">
+			<form name="logForm" ng-submit="submitLog(logForm.$valid)" novalidate>
+				<p>{{log_error}}</p>
+				<p class = "above">Email:</p>
+				<input type = "text" name = "email" class = "i_box" ng-model="user.email" ng-user = required>
+
+				<p class = "above">Password:</p>
+        		<input type = "password" name = "p_word" class = "i_box" required>
+			</form>
+		</div>
+		<div id = "reg_box" style = "display:none">
+			<form name="regForm" ng-submit="submitReg(regForm.$valid)" novalidate>
+
+				<p class = "above">First Name:</p>
+				<input type = "text" name = "f_name" class = "i_box" ng-model="user.f_name" required>
+				<p ng-show="regForm.f_name.$invalid && !regForm.f_name.$pristine" class="validate">Name is required.</p>
+
+				<p class = "above">Last Name:</p>
+				<input type = "text" name = "l_name" class = "i_box" ng-model="user.l_name" required>
+				<p ng-show="regForm.l_name.$invalid && !regForm.l_name.$pristine" class="validate">Name is required.</p>
+
+	        	<p class = "above">Nickname:</p>
+				<input type = "text" name = "n_name" class = "i_box" ng-model="user.n_name" ng-minlength="3" ng-maxlength="12" required>
+				<p ng-show="regForm.n_name.$invalid && !regForm.n_name.$pristine" class="validate">Nickname is required.</p>
+				<p ng-show="regForm.n_name.$error.minlength" class="help-block">Nickname is too short.</p>
+	        	<p ng-show="regForm.n_name.$error.maxlength" class="help-block">Nickname is too long.</p>
+
+	        	<p class = "above">Email:</p>
+				<input type = "text" name = "email" class = "i_box" ng-model="user.email" exists = "emails" ng-user = required>
+	        	<p ng-show="regForm.email.$invalid && !regForm.email.$pristine" class="help-block">Enter a valid email.</p>
+	        	<p ng-show="regForm.email.$invalid">Email already exists in Database</p> 
+
+	        	<p class = "above">Password:</p>
+	        	<input type = "password" name = "p_word" class = "i_box" ng-model="user.p_word" ng-minlength = "8" required ng-pattern="strong">
+	        	<p ng-show="regForm.p_word.$error.minlength" class="help-block">Password Must Be 8 Characters</p>
+	        	<p ng-show="regForm.p_word.$error.pattern">Must contain one digit, and one upper and lower case character</p> 
+
+
+	        	<p class = "above">Confirm Password:</p>
+	        	<input type="password" name="c_word" ng-model="user.c_word" match="user.p_word" required>
+	        	<p ng-show="regForm.c_word.$invalid && !regForm.c_word.$pristine" class="validate">Confirm Password</p>
+	        	<p ng-show="!regForm.c_word.$pristine && regForm.c_word.$error.mismatch">Passwords must match</p> 
+
+
+	        	<button type="submit" class="button_submit">Submit</button>
+	        </form>
+	    </div>
+
 </div>
-
-
 

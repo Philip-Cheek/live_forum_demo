@@ -4,17 +4,44 @@
 		<script type = "text/javascript" src = "https://ajax.googleapis.com/ajax/libs/angularjs/1.4.9/angular.min.js"></script>
 		<link rel = "stylesheet" type = "text/css" href = "../static/styles/style.css"/>
 		<script>
-			var Filthy_Forum = angular.module('mean_forum', [], function() {});
+			var Filthy_Forum = angular.module('mean_forum', ['ngRoute'], function() {});
+
+
+			Filthy_Forum.config(function ($routeProvider) {
+	      		$routeProvider
+		        	.when('/',{
+		            	templateUrl: '../static/partials/enter.html'
+	        		})
+	        		.when('/forum',{
+	            		templateUrl: '../static/partials/forum.html'
+	        		})
+	        		.otherwise({
+	          			redirectTo: '/'
+	        		
+	        		});
+	    	});
 
 			Filthy_Forum.factory('FilthyFactory', function($http) {
 				var factory = {}
 
 				factory.get_emails = function(callback){
-					$http.get('/user_email').success(function(output){
-						email_list = output
+					$http.get('/email_list').success(function(output){
+						var email_list = output;
 						callback(email_list)
 					})
 				};
+
+				factory.create = function(info, callback){
+					$http.post('/create_user', info).success(function(output){
+						callback();
+					}
+				});
+
+				factory.login = function(info, callback).success(function(output){
+					$http.post('/create_user', info).success(function(output){
+						callback(output.status);
+					}
+				}
 
 				return factory
 			});
@@ -53,6 +80,9 @@
 			});
 
 			Filthy_Forum.controller('Login_Controller', function ($scope, FilthyFactory){
+				$scope.head = "Welcome";
+				$scope.log_error;
+
 				$scope.user = {};
 				$scope.strong = /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d).*$/;
 				$scope.emails = [];
@@ -61,62 +91,60 @@
 					$scope.emails = data;
 				}
 
-				$scope.submitForm = function(isValid) {
+				$scope.submitReg = function(isValid) {
 					if (isValid) { 
-						console.log('happy_valid');
+						FilthyFactory.create_user($scope.user, function(){
+							$scope.head = $scope.user.f_name;
+							$scope.user.p_word = "";
+							$scope.user.c_word = "";
+							$location.path('/forum')
+						});
+					}
+				};
+
+				$scope.logReg = function(isValid) {
+					if (isValid) { 
+						FilthyFactory.log_in($scope.user, function(){
+							if (!status){
+								$scope.log_error = "Log In incorrect."
+							}else{
+								$scope.head = $scope.user.f_name;
+								$scope.user.p_word = "";
+								$scope.user.c_word = "";
+								$location.path('/forum')
+							}
+						});
 					}
 				};
 	        });
 
-	
+			var log = [document.getElementById("log_tab"), document.getElementById("log_box")];
+			var reg = [document.getElementById("reg_tab"), document.getElementById("reg_box")];
+			
+			var "log_state" = true;
+			
+			log[0].EventListener('click', function(){
+				if (!log_state){
+					log[1].style.display = 'block'
+					reg[1].style.display = 'none';
+
+					log_state = true;
+				}
+			});
+
+			reg[0].EventListener('click', function(){
+				if (log_state){
+					reg[1].style.display = 'block'
+					log[1].style.display = 'none';
+
+					log_state = false;
+				}
+			});
 		</script>
 	</head>
-	<body ng-controller = "Login_Controller">
-		<div id = "filthy_head">
-			<h1> Welcome to Thing </h1>
+	<body>
+		<div id = "filthy_head" ng-controller="Login-Controller">
+			<h1>{{head}}</h1>
 		</div> 
 
-		<div id = "submit_box">
-			<div id = "head_box">
-				<button>Login</button>
-				<button>Register</button>
-			</div>
-			<form name="userForm" ng-submit="submitForm(userForm.$valid)" novalidate>
-
-				<p class = "above">First Name:</p>
-				<input type = "text" name = "f_name" class = "i_box" ng-model="user.f_name" required>
-				<p ng-show="userForm.f_name.$invalid && !userForm.f_name.$pristine" class="validate">Name is required.</p>
-
-				<p class = "above">Last Name:</p>
-				<input type = "text" name = "l_name" class = "i_box" ng-model="user.l_name" required>
-				<p ng-show="userForm.l_name.$invalid && !userForm.l_name.$pristine" class="validate">Name is required.</p>
-
-            	<p class = "above">Nickname:</p>
-				<input type = "text" name = "n_name" class = "i_box" ng-model="user.n_name" ng-minlength="3" ng-maxlength="12" required>
-				<p ng-show="userForm.n_name.$invalid && !userForm.n_name.$pristine" class="validate">Nickname is required.</p>
-				<p ng-show="userForm.n_name.$error.minlength" class="help-block">Nickname is too short.</p>
-            	<p ng-show="userForm.n_name.$error.maxlength" class="help-block">Nickname is too long.</p>
-
-            	<p class = "above">Email:</p>
-				<input type = "text" name = "email" class = "i_box" ng-model="user.email" exists = "emails" ng-user = required>
-            	<p ng-show="userForm.email.$invalid && !userForm.email.$pristine" class="help-block">Enter a valid email.</p>
-            	<p ng-show="userForm.email.$invalid">Email already exists in Database</p> 
-
-            	<p class = "above">Password:</p>
-            	<input type = "password" name = "p_word" class = "i_box" ng-model="user.p_word" ng-minlength = "8" required ng-pattern="strong">
-            	<p ng-show="userForm.p_word.$error.minlength" class="help-block">Password Must Be 8 Characters</p>
-            	<p ng-show="userForm.p_word.$error.pattern">Must contain one digit, and one upper and lower case character</p> 
-
-
-            	<p class = "above">Confirm Password:</p>
-            	<input type="password" name="c_word" ng-model="user.c_word" match="user.p_word" required>
-            	<p ng-show="userForm.c_word.$invalid && !userForm.c_word.$pristine" class="validate">Confirm Password</p>
-            	<p ng-show="!userForm.c_word.$pristine && userForm.c_word.$error.mismatch">Passwords must match</p> 
-
-
-            	<button type="submit" class="button_submit">Submit</button>
-            </form>
-        </div>
-
-		</div>
-
+		<div ng-view = ""> 
