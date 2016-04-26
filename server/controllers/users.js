@@ -39,17 +39,17 @@ module.exports = (function() {
 			});
 		},
 		log_in: function(req, res){
-			console.log(req)
 			console.log('and if we can make it here')
 			User.find({"email": req.body.email}, function(err, results){
-				console.log(results)
 				if (err){
 					console.log(err);
-				}else if (results.email.length < 1){
+				}else if (results.length < 1){
 					console.log(results)
 					res.json({'status': false})
 				}else{
-					var check = bcrypt.compareSync(req.body.user.p_word, results[0].password);
+					console.log('before sync')
+					var check = bcrypt.compareSync(req.body.p_word, results[0].password)
+					console.log(check)
 					res.json({'status': check})
 				}
 			});

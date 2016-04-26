@@ -26,14 +26,12 @@
 				var factory = {}
 
 				factory.get_emails = function(callback){
-					console.log('here?')
 					$http.get('/email_list').success(function(output){
 						callback(output)
 					})
 				};
 
 				factory.create = function(info, callback){
-					"we get here"
 					$http.post('/create_user', info).success(function(output){
 						callback();
 					});
@@ -119,10 +117,11 @@
 
 				$scope.submitLog = function(isValid) {
 					if (isValid) { 
-						FilthyFactory.login($scope.user, function(){
+						FilthyFactory.login($scope.user, function(status){
 							if (!status){
 								$scope.log_error = "Log In incorrect."
 							}else{
+								console.log($scope.head)
 								$scope.head = $scope.user.f_name;
 								$scope.user.p_word = "";
 								$scope.user.c_word = "";
